@@ -1,6 +1,10 @@
 import os
 import json
+from dotenv import load_dotenv
 from prompt_utils import prompt_llm
+
+
+load_dotenv()
 
 
 def list_text_files_in_directory(directory):
@@ -59,13 +63,26 @@ def main():
                     print(f"PROMPT {i+1} -------------------------------------------------")
                     print(prompt)
                     print(f"REPLY -------------------------------------------------")
-                    #using OpenAI
+
+                    # using OpenAI
+                    print(f"OpenAI -------------------------------------------------")
                     print(prompt_llm(prompt))
-                    #using local LLM
-                    # print(prompt_llm(prompt, 
-                    #                  model="local-model", 
-                    #                  base_url="http://localhost:1234/v1",
-                    #                  api_key="not used"))
+
+                    # using local LLM
+                    print(f"LLAMA Local---------------------------------------------")
+                    print(prompt_llm(prompt,
+                                     model="llama-3.2-3b-instruct",
+                                     base_url="http://127.0.0.1:1234/v1",
+                                     api_key="not used"))
+
+                    # using Perplexity AI
+                    print(f"Perplexity AI ---------------------------------------------")
+                    print(f"key: {os.getenv('PERPLEXITY_API_KEY')}")
+                    print(prompt_llm(prompt,
+                                     model="llama-3.1-sonar-large-128k-online",
+                                     base_url="https://api.perplexity.ai",
+                                     api_key=os.getenv('PERPLEXITY_API_KEY')))
+                    print("\n")
             else:
                 print("Invalid choice. Please enter a valid number.")
         except ValueError:

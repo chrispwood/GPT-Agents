@@ -17,7 +17,8 @@ def ask_chatgpt(messages):
     response = client.chat.completions.create(
         model="gpt-4-1106-preview",
         messages=messages,
-        temperature=0.7,        
+        # temperature=0.7, # high temperature gives it more creativity and variability
+        temperature=0.0 # low temperature gives it less creativity and more predictability
         )     
     
     response_model = response.model_dump()
@@ -33,7 +34,7 @@ messages = [
         },
     {
         "role": "user",
-        "content": "What is the captial of France?"
+        "content": "What is the capital of France?"
         },
     {
         "role": "assistant",
