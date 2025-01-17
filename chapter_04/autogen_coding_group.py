@@ -6,9 +6,10 @@ from autogen import (
     config_list_from_json,
 )
 from autogen.cache import Cache
+import OAI_CONFIG_LIST
 
 # Load the configuration list from the config file.
-config_list = config_list_from_json(env_or_file="OAI_CONFIG_LIST")
+# config_list = config_list_from_json(env_or_file="OAI_CONFIG_LIST.py")
 
 # Create the agent that represents the user in the conversation.
 user_proxy = UserProxyAgent(
@@ -21,11 +22,11 @@ user_proxy = UserProxyAgent(
     human_input_mode="NEVER",
 )
 
-llm_config = {"config_list": config_list}
+llm_conf = {"config_list": OAI_CONFIG_LIST.llm_config["config_list"]}
 
 engineer = AssistantAgent(
     name="Engineer",
-    llm_config=llm_config,
+    llm_config=llm_conf,
     system_message="""
     You are a profession Python engineer, known for your expertise in software development.
     You use your skills to create software applications, tools, and games that are both functional and efficient.
@@ -35,7 +36,7 @@ engineer = AssistantAgent(
 
 critic = AssistantAgent(
     name="Critic",
-    llm_config=llm_config,
+    llm_config=llm_conf,
     system_message="""
     Critic. You are a game engineer and master in evaluating the quality of a given game code by providing a score from 1 (bad) - 10 (good) while providing clear rationale. YOU MUST CONSIDER GAMING BEST PRACTICES for each evaluation. Specifically, you can carefully evaluate the code across the following dimensions
     - bugs (bugs):  are there bugs, logic errors, syntax error or typos? Are there any reasons why the code may fail to compile? How should it be fixed? If ANY bug exists, the bug score MUST be less than 5.
@@ -51,7 +52,7 @@ critic = AssistantAgent(
 )
 
 groupchat = GroupChat(agents=[user_proxy, engineer, critic], messages=[], max_round=20)
-manager = GroupChatManager(groupchat=groupchat, llm_config=llm_config)
+manager = GroupChatManager(groupchat=groupchat, llm_config=llm_conf)
 
 task = """Write a snake game using Pygame."""
 
